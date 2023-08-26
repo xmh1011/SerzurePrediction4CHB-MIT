@@ -1,0 +1,6 @@
+.idea/
+
+# MacOS
+.DS_Store
+!/archive.physionet.org/
+!/dataset/

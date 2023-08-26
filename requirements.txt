@@ -1,0 +1,7 @@
+numpy
+keras
+pyedflib
+scipy
+matplotlib
+statistics
+tensorflow

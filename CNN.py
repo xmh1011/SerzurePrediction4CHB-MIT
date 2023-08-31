@@ -243,7 +243,7 @@ def main():
         print('Spectograms data loaded')
 
         result = 'Patient ' + patients[indexPat] + '\n'
-        result = 'Out Seizure, True Positive, False Positive, False negative, Second of Inter in Test, Sensitivity, FPR \n'
+        result += 'Out Seizure, True Positive, False Positive, False negative, Second of Inter in Test, Sensitivity, FPR \n'
         for i in range(0, nSeizure):
             print('SEIZURE OUT: ' + str(i + 1))
 
@@ -251,11 +251,11 @@ def main():
             model = createModel()
             filesPath = getFilesPathWithoutSeizure(i)
 
-            model.fit_generator(generate_arrays_for_training(filesPath, end=75),
-                                validation_data=generate_arrays_for_training(filesPath, start=75),
-                                steps_per_epoch=int((len(filesPath) - int(len(filesPath) / 100 * 25))),
-                                validation_steps=int((len(filesPath) - int(len(filesPath) / 100 * 75))), verbose=2,
-                                epochs=300, max_queue_size=2, callbacks=[
+            model.fit(generate_arrays_for_training(filesPath, end=75),
+                      validation_data=generate_arrays_for_training(filesPath, start=75),
+                      steps_per_epoch=int((len(filesPath) - int(len(filesPath) / 100 * 25))),
+                      validation_steps=int((len(filesPath) - int(len(filesPath) / 100 * 75))), verbose=2,
+                      epochs=300, max_queue_size=2, callbacks=[
                     callback])  # 100 epochs are better. Add stop criteria based on accuracy.
             print('Training end')
 
@@ -264,11 +264,11 @@ def main():
                 filesPath = interictalSpectograms[i]
             else:
                 filesPath = []
-            interictalPrediction = model.predict_generator(generate_arrays_for_predict(filesPath),
-                                                           max_queue_size=4, steps=len(filesPath))
+            interictalPrediction = model.predict(generate_arrays_for_predict(filesPath),
+                                                 max_queue_size=4, steps=len(filesPath))
             filesPath = preictalRealSpectograms[i]
-            preictalPrediction = model.predict_generator(generate_arrays_for_predict(filesPath),
-                                                         max_queue_size=4, steps=len(filesPath))
+            preictalPrediction = model.predict(generate_arrays_for_predict(filesPath),
+                                               max_queue_size=4, steps=len(filesPath))
             print('Testing end')
 
             # Creates a HDF5 file

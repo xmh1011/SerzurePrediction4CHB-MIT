@@ -1,4 +1,4 @@
-if [ ! -d "archive.physionet.org/pn6/chbmit/" ]; then
+if [ ! -d "../archive.physionet.org/pn6/chbmit/" ]; then
     echo "Downloading data"
     wget -r --no-parent https://archive.physionet.org/pn6/chbmit/
     echo "Downloaded data"

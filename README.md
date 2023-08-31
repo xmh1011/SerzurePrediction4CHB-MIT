@@ -5,7 +5,7 @@ The objective of the project was to try to replicate the result in the paper:
 
 The algorithm consist of create spectograms of the data and then using them with a CNN model to predict seizure.
 
-More information are in [presentazione.pdf](presentazione.pdf) and [paper.pdf](Convolutional neural networks for seizure prediction using scalp electroencephalogram.pdf).
+More information are in [presentazione.pdf](presentazione.pdf) and [paper.pdf](paper.pdf).
 The two files are respectively the presentation and the relation of the work in italian language.
 
 ## Getting Started
@@ -73,7 +73,6 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 * [**Alessandra Renieri**](https://github.com/a311987)
 
 ## License
-
 This project is licensed under the GNU GENERAL PUBLIC LICENSE - see the [LICENSE.md](LICENSE.md) file for details
 <!---
 ## Acknowledgments

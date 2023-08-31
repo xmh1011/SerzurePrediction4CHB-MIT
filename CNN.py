@@ -155,7 +155,8 @@ def createModel():
     model.add(Dropout(0.5))
     model.add(Dense(2, activation='softmax'))
 
-    opt_adam = tf.keras.optimizers.legacy.Adam(learning_rate=0.00001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+    opt_adam = tf.keras.optimizers.legacy.Adam(learning_rate=0.00001, beta_1=0.9, beta_2=0.999, epsilon=1e-08,
+                                               decay=0.0)
     model.compile(loss='categorical_crossentropy', optimizer=opt_adam, metrics=['accuracy'])
 
     return model
@@ -163,10 +164,11 @@ def createModel():
 
 def getFilesPathWithoutSeizure(indexSeizure):
     filesPath = []
-    for i in range(0, nSeizure):
+    for i in range(0, nSeizure):  # nSeizure = 7
         if i != indexSeizure:
-            filesPath.extend(interictalSpectograms[i])
-            filesPath.extend(preictalSpectograms[i])
+            if i < len(interictalSpectograms):
+                filesPath.extend(interictalSpectograms[i])  # interictalSpectograms = 2
+            filesPath.extend(preictalSpectograms[i])  # preictalSpectograms = 7
     shuffle(filesPath)
     return filesPath
 
@@ -207,9 +209,7 @@ class EarlyStoppingByLossVal(keras.callbacks.Callback):
         self.verbose = verbose
         self.lower = lower
 
-    def on_epoch_end(self, epoch, logs=None):
-        if logs is None:
-            logs = {}
+    def on_epoch_end(self, epoch, logs={}):
         current = logs.get(self.monitor)
         if self.lower:
             if current < self.value:
@@ -265,7 +265,7 @@ def main():
                                                        max_queue_size=4, steps=len(filesPath))
             print('Testing end')
 
-            # Creates a HDF5 file 
+            # Creates a HDF5 file
             model.save(
                 OutputPathModels + "ModelPat" + patients[indexPat] + "/" + 'ModelOutSeizure' + str(i + 1) + '.h5')
             print("Model saved")

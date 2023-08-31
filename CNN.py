@@ -256,16 +256,19 @@ def main():
                                 steps_per_epoch=int((len(filesPath) - int(len(filesPath) / 100 * 25))),
                                 validation_steps=int((len(filesPath) - int(len(filesPath) / 100 * 75))), verbose=2,
                                 epochs=300, max_queue_size=2, callbacks=[
-                    callback])  # 100 epochs è meglio #aggiungere criterio di stop in base accuratezza
+                    callback])  # 100 epochs are better. Add stop criteria based on accuracy.
             print('Training end')
 
             print('Testing start')
-            filesPath = interictalSpectograms[i]
-            interPrediction = model.predict_generator(generate_arrays_for_predict(filesPath),
-                                                      max_queue_size=4, steps=len(filesPath))
+            if i < len(interictalSpectograms):
+                filesPath = interictalSpectograms[i]
+            else:
+                filesPath = []
+            interictalPrediction = model.predict_generator(generate_arrays_for_predict(filesPath),
+                                                           max_queue_size=4, steps=len(filesPath))
             filesPath = preictalRealSpectograms[i]
-            preictPrediction = model.predict_generator(generate_arrays_for_predict(filesPath),
-                                                       max_queue_size=4, steps=len(filesPath))
+            preictalPrediction = model.predict_generator(generate_arrays_for_predict(filesPath),
+                                                         max_queue_size=4, steps=len(filesPath))
             print('Testing end')
 
             # Creates a HDF5 file
@@ -279,9 +282,9 @@ def main():
             if not os.path.exists(OutputPathModels + "OutputTest" + "/"):
                 os.makedirs(OutputPathModels + "OutputTest" + "/")
             np.savetxt(OutputPathModels + "OutputTest" + "/" + "Int_" + patients[indexPat] + "_" + str(i + 1) + ".csv",
-                       interPrediction, delimiter=",")
+                       interictalPrediction, delimiter=",")
             np.savetxt(OutputPathModels + "OutputTest" + "/" + "Pre_" + patients[indexPat] + "_" + str(i + 1) + ".csv",
-                       preictPrediction, delimiter=",")
+                       preictalPrediction, delimiter=",")
 
             secondsInterictalInTest = len(
                 interictalSpectograms[i]) * 50 * 30  # 50 spectograms for file, 30 seconds for each spectogram
@@ -291,7 +294,7 @@ def main():
             fn = 0
             lastTenResult = list()
 
-            for el in interPrediction:
+            for el in interictalPrediction:
                 if el[1] > 0.5:
                     acc = acc + 1
                     lastTenResult.append(1)
@@ -305,7 +308,7 @@ def main():
                     acc = 0
 
             lastTenResult = list()
-            for el in preictPrediction:
+            for el in preictalPrediction:
                 if el[1] > 0.5:
                     acc = acc + 1
                     lastTenResult.append(1)
@@ -328,8 +331,8 @@ def main():
             print('True Positive, False Positive, False negative, Second of Inter in Test, Sensitivity, FPR')
             print(str(tp) + ',' + str(fp) + ',' + str(fn) + ',' + str(secondsInterictalInTest) + ',' + str(
                 sensitivity) + ',' + str(FPR))
-        with open(OutputPath, "a+") as myfile:
-            myfile.write(result)
+        with open(OutputPath, "a+") as myFile:
+            myFile.write(result)
 
 
 if __name__ == '__main__':

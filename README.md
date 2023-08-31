@@ -1,16 +1,17 @@
 # CNNs-on-CHB-MIT
-The project is about applying CNNs to EEG data from CHB-MIT to predict seizure. It's a group project assigned at UNIVERSITA' DI CAMERINO for computer science bachelor.
-The objective of the project was to try to replicate the result obtained in the paper:
+The project is about applying CNNs to EEG data from CHB-MIT to predict seizure. It is a group project assigned at UNIVERSITA' DI CAMERINO for computer science bachelor.
+The objective of the project was to try to replicate the result in the paper:
 [Truong, Nhan Duy, et al. "Convolutional neural networks for seizure prediction using intracranial and scalp electroencephalogram." Neural Networks 105 (2018): 104-111.](https://www.sciencedirect.com/science/article/pii/S0893608018301485)
 
-The algorithm consist to create spectograms of the data and than use them with a CNN model to predict seizure.
+The algorithm consist of create spectograms of the data and then using them with a CNN model to predict seizure.
 
-More information are in [presentazione.pdf](presentazione.pdf) and [relazione.pdf](relazione.pdf). The two file are respectively the presentation and the relation of the work in italian language.
+More information are in [presentazione.pdf](presentazione.pdf) and [paper.pdf](Convolutional neural networks for seizure prediction using scalp electroencephalogram.pdf).
+The two files are respectively the presentation and the relation of the work in italian language.
 
 ## Getting Started
 
 ### Prerequisites
-In the project anaconda was used to managed the packages. Packages required:
+In the project, anaconda was used to manage the packages. Packages required:
 
 * keras 2.2.2
 * python 3.6.6
@@ -42,12 +43,12 @@ The dataset is downloadable from this site: [https://archive.physionet.org/pn6/c
 ```bash
 wget -r --no-parent https://archive.physionet.org/pn6/chbmit/
 ```
-In the code only patients 1, 2, 5, 19, 21, 23 are used, the others are discarded for problems in the data.
-**NOTE**: For the patient 19 replace the summary file(chb19-summary.txt) with the one in this repository inside the folder summaryChanged.
+In the code only patients 1, 2, 5, 19, 21, 23 are used; the others are discarded for problems in the data.
+**NOTE**: For patient 19 replace the summary file(chb19-summary.txt) with the one in this repository inside the folder summaryChanged.
 
 ## Running
 
-After setted all the parameters run the code.
+After set all the parameters, run the code.
 ```bash
 pip3 install -r requirements.txt
 python3 DatasetToSpectogram.py #Creation of the spectograms

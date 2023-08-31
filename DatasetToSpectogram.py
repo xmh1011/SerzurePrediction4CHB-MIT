@@ -38,7 +38,7 @@ def loadParametersFromFile(filePath):
                 FirstPartPathOutput = line.split(":")[1].strip()
 
 
-# Filtro taglia banda
+# Band cut filter 带宽过滤器
 def butter_bandstop_filter(data, lowcut, highcut, fs, order):
     nyq = 0.5 * fs
     low = lowcut / nyq
@@ -49,7 +49,7 @@ def butter_bandstop_filter(data, lowcut, highcut, fs, order):
     return y
 
 
-# Filtro taglia banda, passa alta
+# Band cut filter, high pass
 def butter_highpass_filter(data, cutoff, fs, order=5):
     nyq = 0.5 * fs
     normal_cutoff = cutoff / nyq
@@ -58,14 +58,18 @@ def butter_highpass_filter(data, cutoff, fs, order=5):
     return y
 
 
-# Creazione del puntatore al file del paziente con indice uguale a index
+# Creation of the pointer to the patient file with index equal to index
+# 创建指向患者文件的指针, 使index等于index.
 def loadSummaryPatient(index):
     f = open(pathDataSet + 'chb' + patients[index] + '/chb' + patients[index] + '-summary.txt')
     return f
 
 
-# Caricamento dei dati di un paziente(indexPatient). I dati sono presi dal file con il nome indicato in fileOfData
-# Restituisce un vettore numpy con i dati del paziente contenuti nel file
+# Patient data loading(indexPatient).
+# Data is taken from the file with the filename given in fileOfData.
+# Returns a numpy array with patient data contained in the file.
+# 患者数据加载(indexPatient)数据是从fileOfData中指定的文件中获取的.
+# 返回一个numpy数组, 包含文件中包含的患者数据.
 def loadDataOfPatient(indexPatient, fileOfData):
     f = pyedflib.EdfReader(pathDataSet + 'chb' + patients[
         indexPatient] + '/' + fileOfData)  # https://pyedflib.readthedocs.io/en/latest/#description
@@ -87,8 +91,8 @@ def cleanData(Data, indexPatient):
     return Data
 
 
-# Conversione di una stringa indicante un tempo in un oggetto di tipo datetime
-# e pulizia di date che non rispettano i limiti delle ore
+# Conversion of a time string to a datetime type object and cleaning dates that do not respect time limits.
+# 将时间字符串转换为datetime类型对象和不受时间限制的清洁日期.
 def getTime(dateInString):
     try:
         time = datetime.strptime(dateInString, '%H:%M:%S')
@@ -122,9 +126,12 @@ def saveSignalsOnDisk(signalsBlock, nSpectogram):
         nSpectogram - signalsBlock.shape[0]) + '_' + str(nSpectogram - 1) + '.npy\n'
 
 
-# Divide i dati contenuti in data in finestre e crea gli spettrogrammi che vengono salvati sul disco
-# S è il fattore che indica di quanto ogni finestra si sposta
-# Restituisce i dati non considerati, ciò accade quando i dati non sono divisibili per la lunghezza della finestra
+# splits data contained in data into Windows and creates spectrograms that are saved on disk
+# s is the factor indicating how far each window moves
+# returns data that is not considered; this happens when the data is not divisible by the length of the window
+# 将数据中包含的数据拆分到窗口中, 并创建保存在磁盘上的频谱图
+# s是表示每个窗口移动多远的因子
+# 返回未被考虑的数据, 当数据不能被窗口长度整除时就会发生这种情况.
 def createSpectrogram(data, S=0):
     global nSpectrogram
     global signalsBlock
@@ -136,7 +143,7 @@ def createSpectrogram(data, S=0):
     if S == 0:
         movement = _SIZE_WINDOW_SPECTOGRAM
     while data.shape[1] - (t * movement + _SIZE_WINDOW_SPECTOGRAM) > 0:
-        # CREAZIONE DELLO SPETROGRAMMA PER TUTTI I CANALI
+        # creating the spectrogram for all channels
         for i in range(0, 22):
             start = t * movement
             stop = start + _SIZE_WINDOW_SPECTOGRAM
@@ -149,12 +156,13 @@ def createSpectrogram(data, S=0):
         if signalsBlock.shape[0] == 50:
             saveSignalsOnDisk(signalsBlock, nSpectrogram)
             signalsBlock = None
-            # SALVATAGGIO DI SIGNALS  
+            # saving signals
         t = t + 1
     return (data.shape[1] - t * _SIZE_WINDOW_SPECTOGRAM) * -1
 
 
-# Funzione per la vera creazione dello spettrogramma.
+# function for true spectrogram creation.
+# 用于创建真实频谱图的函数。
 def createSpec(data):
     fs = 256
     lowcut = 117
@@ -178,7 +186,8 @@ def createSpec(data):
     return result
 
 
-# Creazione spettrogramma e visualizzazione con la libreria matplotlib
+# Creating spectrogram and visualization with matplotlib library.
+# 创建频谱图并使用matplotlib库进行可视化。
 def createSpecAndPlot(data):
     freqs, bins, Pxx = signal.spectrogram(data, nfft=256, fs=256, noverlap=128)
 
@@ -187,7 +196,7 @@ def createSpecAndPlot(data):
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
-    plt.title('Spettrogramma')
+    plt.title('Spectrogram')
     plt.show()
     plt.close()
 
@@ -238,14 +247,15 @@ def createSpecAndPlot(data):
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
-    plt.title('Spettrogramma')
+    plt.title('Spectrogram')
     plt.show()
     plt.close()
 
     return result
 
 
-# Classe usata per rappresentare intervalli di dati, sia Preictal che Interictal
+# Class used to represent ranges of data, both preictal and interictal.
+# 用于表示数据范围的类, 无论是发作前还是发作间期.
 class PreIntData:
     start = 0
     end = 0
@@ -255,7 +265,8 @@ class PreIntData:
         self.end = e
 
 
-# Classe usata per tenere i dati dei file, data e ora inizio e fine e nome del file associato
+# Class used to keep file data, date and time start and end and associated file name.
+# 用于保留文件数据, 日期和时间开始和结束以及关联的文件名的类.
 class FileData:
     start = 0
     end = 0
@@ -267,17 +278,22 @@ class FileData:
         self.nameFile = nF
 
 
-# Funzione che carica in memoria tutti i dati utili del paziente analizzato
-# Puntatore al file summary del paziente analizzato
-# Restituisce: preictalInterval: vettore di PreIntData con tutti gli intervalli di tutti i dati preictal
-#                               vettore di PreIntData con tutti gli intervalli di tutti i dati interictal
-#                               vettore di FileData con tutti i dati dei vari file
+# function that stores all useful data of the patient analysed
+# pointer to the summary file of the analysed patient
+# returns: preictalInterval: PreIntData vector with all ranges of all preictal data
+#          interictalInterval: PreIntData vector with all ranges of all interictal data
+#          files: filename vector with all the data of the various files
+# 函数存储分析患者的所有有用数据
+# 分析患者的摘要文件的指针
+# 返回: preictalInterval: PreIntData向量, 其中包含所有发作前数据的所有范围
+#      interictalInterval: PreIntData向量, 其中包含所有发作间期数据的所有范围
+#      files: filename向量, 其中包含各个文件的所有数据
 def createArrayIntervalData(fSummary):
-    preinstallInterval = []
+    preictalInterval = []
     interictalInterval = [PreIntData(datetime.min, datetime.max)]
     files = []
     firstTime = True
-    oldTime = datetime.min  # equivalente di 0 nelle date
+    oldTime = datetime.min  # Equivalent of 0 on dates
     startTime = 0
     line = fSummary.readline()
     endS = datetime.min
@@ -290,11 +306,11 @@ def createArrayIntervalData(fSummary):
                 interictalInterval[0].start = s
                 firstTime = False
                 startTime = s
-            while s < oldTime:  # se cambia di giorno aggiungo 24 ore alla data
+            while s < oldTime:  # If it changes by day, add 24 hours to the date.
                 s = s + timedelta(hours=24)
             oldTime = s
             endTimeFile = getTime((fSummary.readline().split(": "))[1].strip())
-            while endTimeFile < oldTime:  # se cambia di giorno aggiungo 24 ore alla data
+            while endTimeFile < oldTime:  # If it changes by day, add 24 hours to the date.
                 endTimeFile = endTimeFile + timedelta(hours=24)
             oldTime = endTimeFile
             files.append(FileData(s, endTimeFile, nF))
@@ -303,9 +319,9 @@ def createArrayIntervalData(fSummary):
                 secEn = int(fSummary.readline().split(': ')[1].split(' ')[0])
                 ss = s + timedelta(seconds=secSt) - timedelta(
                     minutes=_MINUTES_OF_DATA_BETWEEN_PRE_AND_SEIZURE + _MINUTES_OF_PREICTAL)
-                if (len(preinstallInterval) == 0 or ss > endS) and ss - startTime > timedelta(minutes=20):
+                if (len(preictalInterval) == 0 or ss > endS) and ss - startTime > timedelta(minutes=20):
                     ee = ss + timedelta(minutes=_MINUTES_OF_PREICTAL)
-                    preinstallInterval.append(PreIntData(ss, ee))
+                    preictalInterval.append(PreIntData(ss, ee))
                 endS = s + timedelta(seconds=secEn)
                 ss = s + timedelta(seconds=secSt) - timedelta(hours=4)
                 ee = s + timedelta(seconds=secEn) + timedelta(hours=4)
@@ -319,7 +335,7 @@ def createArrayIntervalData(fSummary):
         line = fSummary.readline()
     fSummary.close()
     interictalInterval[len(interictalInterval) - 1].end = endTimeFile
-    return preinstallInterval, interictalInterval, files
+    return preictalInterval, interictalInterval, files
 
 
 def main():
@@ -342,10 +358,10 @@ def main():
         f = loadSummaryPatient(indexPatient)
         preictalInfo, interictalInfo, filesInfo = createArrayIntervalData(f)
         if patients[indexPatient] == "19":
-            preictalInfo.pop(0)  # Eliminazione dei dati della prima seizure perchè non viene considerata
+            preictalInfo.pop(0)  # Deletion of data from the first indent because it is not considered
         print("Summary patient loaded")
 
-        # INIZIO ciclo gestione interictal data
+        # Start of management cycle interms date
         print("START creation interictal spectrogram")
         totInst = 0
         # c=0
@@ -375,14 +391,14 @@ def main():
                 if not end == 0:
                     end = end * 256
                 if tmpData.shape[0] < 22:
-                    print(patients[indexPatient] + "  HA UN NUMERO MINORE DI CANALI")
+                    print(patients[indexPatient] + "Fewer channels, do not consider the file " + fInfo.nameFile)
                 else:
                     interictalData = np.concatenate((interictalData, tmpData[0:22, start * 256:end]), axis=1)
                     notUsed = createSpectrogram(interictalData)
                     totInst += interictalData.shape[1] / 256 - notUsed / 256
                     interictalData = np.delete(interictalData, np.s_[0:interictalData.shape[1] - notUsed], axis=1)
 
-        # dimensione_finestra:lunghezza_dati_I=S:(lunghezza_dati_P-30_SEC_PER_OGNI_SEIZURE)
+        # Window_size: length_data_i = s :(length_data_p-30_sec_for _each aspect)
         if totInst == 0:
             S = 0
         else:
@@ -403,9 +419,7 @@ def main():
         legendOfOutput = ''
         nSpectrogram = 0
         print("END creation interictal spectrogram")
-        # FINE ciclo gestione interictal data
 
-        # INIZIO ciclo gestione preictal data
         print("START creation preictal spectrogram")
         isPreictal = 'P'
         contSeizure = -1
@@ -419,7 +433,7 @@ def main():
                     break
             start = (pInfo.start - filesInfo[j].start).seconds
             if start < 0:
-                start = 0  # se la preictal inizia prima dell'inizio del file
+                start = 0  # if preictal starts before the file starts
             if pInfo.end <= filesInfo[j].end:
                 end = (pInfo.end - filesInfo[j].start).seconds
                 tmpData = loadDataOfPatient(indexPatient, filesInfo[j].nameFile)
@@ -439,9 +453,9 @@ def main():
         print("Spectrogram preictal: " + str(nSpectrogram))
         print("SEIZURE: " + str(len(preictalInfo)))
         print("END creation preictal spectrogram")
-        # FINE ciclo gestione preictal data'''
+        # END cycle management preictal data
 
-        # INIZIO ciclo gestione REAL preictal data 
+        # START cycle management preictal data
         print("START creation \'real\' preictal spectrogram")
         isPreictal = 'P_R'
         nSpectrogram = 0
@@ -458,7 +472,7 @@ def main():
                     break
             start = (pInfo.start - filesInfo[j].start).seconds
             if start < 0:
-                start = 0  # se la preictal inizia prima dell'inizio del file
+                start = 0  # if preictal starts before the file starts
             if pInfo.end <= filesInfo[j].end:
                 end = (pInfo.end - filesInfo[j].start).seconds
                 tmpData = loadDataOfPatient(indexPatient, filesInfo[j].nameFile)
@@ -477,7 +491,6 @@ def main():
         allLegend = allLegend + "\n" + "REAL_PREICTAL" + "\n" + str(nSpectrogram) + "\n" + legendOfOutput
         print("Spectrogram \'REAL\' preictal: " + str(nSpectrogram))
         print("END creation \'real\' preictal spectrogram")
-        # FINE ciclo gestione preictal data
 
         text_file = open(FirstPartPathOutput + SecondPartPathOutput + "/legendAllData.txt", "w")
         text_file.write(allLegend)

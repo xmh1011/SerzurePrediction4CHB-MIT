@@ -1,10 +1,10 @@
 # https://medium.com/@naomi.fridman/install-conda-tensorflow-gpu-and-keras-on-ubuntu-18-04-1b403e740e25 install gpu
 
-# INIZIO codice per allenare la rete sulla cpu
+# start code to train the network on the CPU
 import os
 # os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"   # see issue #152
 # os.environ["CUDA_VISIBLE_DEVICES"] = ""
-# FINE codice per allenare la rete sulla cpu
+# end of code to train the network on the CPU
 
 import keras
 import numpy as np
@@ -25,8 +25,8 @@ PathSpectogramFolder = ''
 OutputPath = ''
 OutputPathModels = ''
 interictalSpectograms = []
-preictalSpectograms = []  # This array contains syntetic data, it's created to have a balance dataset and it's used for training
-preictalRealSpectograms = []  # This array containt the real preictal data, it's used for testing
+preictalSpectograms = []  # This array contains synthetic data, it is created to have a balance dataset, and it's used for training.
+preictalRealSpectograms = []  # This array contains the real preictal data, it is used for testing.
 patients = ["01", "02", "05", "19", "21", "23"]
 nSeizure = 0
 
@@ -65,12 +65,12 @@ def loadSpectogramData(indexPat):
         line = f.readline()
     nSeizure = int(line.split(":")[1].strip())
     line = f.readline()
-    line = f.readline()  # legge il numero di spectogrammi. non lo salvo dato che non mi serve
+    line = f.readline()  # Read the number of spectograms.
     nSpectograms = int(line.strip())
     nFileForSeizure = math.ceil(math.ceil(nSpectograms / 50) / nSeizure)
-    line = f.readline()  # leggo il percorso del primo file
+    line = f.readline()  # Read the path of the first file
 
-    # Lettura path files Interictal
+    # Reading interictal path files
     cont = -1
     indFilePathRead = 0
     while "npy" in line and indFilePathRead < nSeizure * nFileForSeizure:
@@ -89,7 +89,7 @@ def loadSpectogramData(indexPat):
     line = f.readline()  # leggo n° spectogram
     line = f.readline()  # leggo n°seizure(SEIZURE X)
 
-    # Lettura path files Preictal
+    # Read path files preictal
     cont = -1
     indFilePathRead = 0
     # while(line and indFilePathRead<nSeizure*nFileForSeizure):

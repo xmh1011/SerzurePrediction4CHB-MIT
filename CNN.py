@@ -157,7 +157,7 @@ def createModel():
 
     opt_adam = tf.keras.optimizers.legacy.Adam(learning_rate=0.00001, beta_1=0.9, beta_2=0.999, epsilon=1e-08,
                                                decay=0.0)
-    model.compile(loss='categorical_crossentropy', optimizer=opt_adam, metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=opt_adam, metrics=['acc'])
 
     return model
 
@@ -204,12 +204,15 @@ def generate_arrays_for_predict(paths, start=0, end=100):
 class EarlyStoppingByLossVal(keras.callbacks.Callback):
     def __init__(self, monitor='val_loss', value=0.00001, verbose=0, lower=True):
         super(keras.callbacks.Callback, self).__init__()
+        super().__init__()
         self.monitor = monitor
         self.value = value
         self.verbose = verbose
         self.lower = lower
 
-    def on_epoch_end(self, epoch, logs={}):
+    def on_epoch_end(self, epoch, logs=None):
+        if logs is None:
+            logs = {}
         current = logs.get(self.monitor)
         if self.lower:
             if current < self.value:

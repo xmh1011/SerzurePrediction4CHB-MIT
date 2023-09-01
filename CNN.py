@@ -235,14 +235,14 @@ def main():
     callback = EarlyStoppingByLossVal(monitor='val_acc', value=0.975, verbose=1, lower=False)
     print("Parameters loaded")
 
-    for indexPat in range(0, len(patients)):
-        print('Patient ' + patients[indexPat])
-        if not os.path.exists(OutputPathModels + "ModelPat" + patients[indexPat] + "/"):
-            os.makedirs(OutputPathModels + "ModelPat" + patients[indexPat] + "/")
-        loadSpectogramData(indexPat)
+    for indexPatient in range(0, len(patients)):
+        print('Patient ' + patients[indexPatient])
+        if not os.path.exists(OutputPathModels + "ModelPat" + patients[indexPatient] + "/"):
+            os.makedirs(OutputPathModels + "ModelPat" + patients[indexPatient] + "/")
+        loadSpectogramData(indexPatient)
         print('Spectograms data loaded')
 
-        result = 'Patient ' + patients[indexPat] + '\n'
+        result = 'Patient ' + patients[indexPatient] + '\n'
         result += 'Out Seizure, True Positive, False Positive, False negative, Second of Inter in Test, Sensitivity, FPR \n'
         for i in range(0, nSeizure):
             print('SEIZURE OUT: ' + str(i + 1))
@@ -273,7 +273,7 @@ def main():
 
             # Creates a HDF5 file
             model.save(
-                OutputPathModels + "ModelPat" + patients[indexPat] + "/" + 'ModelOutSeizure' + str(i + 1) + '.h5')
+                OutputPathModels + "ModelPat" + patients[indexPatient] + "/" + 'ModelOutSeizure' + str(i + 1) + '.keras')
             print("Model saved")
 
             # to plot the model
@@ -281,9 +281,9 @@ def main():
 
             if not os.path.exists(OutputPathModels + "OutputTest" + "/"):
                 os.makedirs(OutputPathModels + "OutputTest" + "/")
-            np.savetxt(OutputPathModels + "OutputTest" + "/" + "Int_" + patients[indexPat] + "_" + str(i + 1) + ".csv",
+            np.savetxt(OutputPathModels + "OutputTest" + "/" + "Int_" + patients[indexPatient] + "_" + str(i + 1) + ".csv",
                        interictalPrediction, delimiter=",")
-            np.savetxt(OutputPathModels + "OutputTest" + "/" + "Pre_" + patients[indexPat] + "_" + str(i + 1) + ".csv",
+            np.savetxt(OutputPathModels + "OutputTest" + "/" + "Pre_" + patients[indexPatient] + "_" + str(i + 1) + ".csv",
                        preictalPrediction, delimiter=",")
 
             secondsInterictalInTest = len(
@@ -328,9 +328,8 @@ def main():
             result = result + str(i + 1) + ',' + str(tp) + ',' + str(fp) + ',' + str(fn) + ',' + str(
                 secondsInterictalInTest) + ','
             result = result + str(sensitivity) + ',' + str(FPR) + '\n'
-            print('True Positive, False Positive, False negative, Second of Inter in Test, Sensitivity, FPR')
-            print(str(tp) + ',' + str(fp) + ',' + str(fn) + ',' + str(secondsInterictalInTest) + ',' + str(
-                sensitivity) + ',' + str(FPR))
+            print('True Positive: ' + str(tp) + '  False Positive: ' + str(fp) + '  False negative: ' + str(fn) + '  Second of Inter in Test: ' + str(secondsInterictalInTest) + '  Sensitivity: ' + str(
+                sensitivity) + '  FPR: ' + str(FPR) + '\n')
         with open(OutputPath, "a+") as myFile:
             myFile.write(result)
 

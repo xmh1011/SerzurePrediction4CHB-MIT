@@ -234,7 +234,7 @@ def createSpecAndPlot(data):
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
-    plt.title('Spettrogramma')
+    plt.title('Spectrogram')
     plt.show()
     plt.close()
 

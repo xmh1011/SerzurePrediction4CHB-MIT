@@ -161,7 +161,7 @@ def createSpectrogram(data, S=0):
     return (data.shape[1] - t * _SIZE_WINDOW_SPECTOGRAM) * -1
 
 
-# function for true spectrogram creation.
+# Function for true spectrogram creation.
 # 用于创建真实频谱图的函数。
 def createSpec(data):
     fs = 256
@@ -189,10 +189,10 @@ def createSpec(data):
 # Creating spectrogram and visualization with matplotlib library.
 # 创建频谱图并使用matplotlib库进行可视化。
 def createSpecAndPlot(data):
-    freqs, bins, Pxx = signal.spectrogram(data, nfft=256, fs=256, noverlap=128)
+    frequency, bins, Pxx = signal.spectrogram(data, nfft=256, fs=256, noverlap=128)
 
     print("Original")
-    plt.pcolormesh(freqs, bins, 10 * np.log10(np.transpose(Pxx)), cmap=plt.cm.jet)
+    plt.pcolormesh(frequency, bins, 10 * np.log10(np.transpose(Pxx)), cmap=plt.cm.jet)
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
@@ -213,10 +213,10 @@ def createSpecAndPlot(data):
     y = butter_highpass_filter(y, cutoff, fs, order=6)
 
     # Pxx=signal.spectrogram(y, nfft=256, fs=256, return_onesided=True, noverlap=128)[2]
-    freqs, bins, Pxx = signal.spectrogram(y, nfft=256, fs=256, noverlap=128)
+    frequency, bins, Pxx = signal.spectrogram(y, nfft=256, fs=256, noverlap=128)
 
     print("Filtered")
-    plt.pcolormesh(freqs, bins, 10 * np.log10(np.transpose(Pxx)), cmap=plt.cm.jet)
+    plt.pcolormesh(frequency, bins, 10 * np.log10(np.transpose(Pxx)), cmap=plt.cm.jet)
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
@@ -229,8 +229,8 @@ def createSpecAndPlot(data):
     Pxx = np.delete(Pxx, 0, axis=0)
 
     print("Cleaned but not standard")
-    freqs = np.arange(Pxx.shape[0])
-    plt.pcolormesh(freqs, bins, 10 * np.log10(np.transpose(Pxx)), cmap=plt.cm.jet)
+    frequency = np.arange(Pxx.shape[0])
+    plt.pcolormesh(frequency, bins, 10 * np.log10(np.transpose(Pxx)), cmap=plt.cm.jet)
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
@@ -242,8 +242,8 @@ def createSpecAndPlot(data):
             10 * np.log10(np.transpose(Pxx))).ptp()
 
     print("Standard")
-    freqs = np.arange(result.shape[1])
-    plt.pcolormesh(freqs, bins, result, cmap=plt.cm.jet)
+    frequency = np.arange(result.shape[1])
+    plt.pcolormesh(frequency, bins, result, cmap=plt.cm.jet)
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')

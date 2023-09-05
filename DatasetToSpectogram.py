@@ -165,13 +165,13 @@ def createSpectrogram(data, S=0):
 # 用于创建真实频谱图的函数。
 def createSpec(data):
     fs = 256
-    lowcut = 117
-    highcut = 123
+    lowCut = 117
+    highCut = 123
 
-    y = butter_bandstop_filter(data, lowcut, highcut, fs, order=6)
-    lowcut = 57
-    highcut = 63
-    y = butter_bandstop_filter(y, lowcut, highcut, fs, order=6)
+    y = butter_bandstop_filter(data, lowCut, highCut, fs, order=6)
+    lowCut = 57
+    highCut = 63
+    y = butter_bandstop_filter(y, lowCut, highCut, fs, order=6)
 
     cutoff = 1
     y = butter_highpass_filter(y, cutoff, fs, order=6)
@@ -201,13 +201,13 @@ def createSpecAndPlot(data):
     plt.close()
 
     fs = 256
-    lowcut = 117
-    highcut = 123
+    lowCut = 117
+    highCut = 123
 
-    y = butter_bandstop_filter(data, lowcut, highcut, fs, order=6)
-    lowcut = 57
-    highcut = 63
-    y = butter_bandstop_filter(y, lowcut, highcut, fs, order=6)
+    y = butter_bandstop_filter(data, lowCut, highCut, fs, order=6)
+    lowCut = 57
+    highCut = 63
+    y = butter_bandstop_filter(y, lowCut, highCut, fs, order=6)
 
     cutoff = 1
     y = butter_highpass_filter(y, cutoff, fs, order=6)
@@ -220,7 +220,7 @@ def createSpecAndPlot(data):
     plt.colorbar()
     plt.ylabel('sec')
     plt.xlabel('Hz')
-    plt.title('Spettrogramma')
+    plt.title('Spectrogram')
     plt.show()
     plt.close()
 

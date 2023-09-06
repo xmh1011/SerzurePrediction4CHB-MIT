@@ -323,6 +323,7 @@ def main():
                         fn = fn + 1
 
             sensitivity = tp / (tp + fn)
+            # FPR(False Predicting Rate)
             FPR = fp / (secondsInterictalInTest / (60 * 60))
 
             result = result + str(i + 1) + ',' + str(tp) + ',' + str(fp) + ',' + str(fn) + ',' + str(

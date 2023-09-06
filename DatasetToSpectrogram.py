@@ -39,10 +39,10 @@ def loadParametersFromFile(filePath):
 
 
 # Band cut filter 带宽过滤器
-def butter_bandstop_filter(data, lowcut, highcut, fs, order):
+def butter_bandstop_filter(data, lowCut, highCut, fs, order):
     nyq = 0.5 * fs
-    low = lowcut / nyq
-    high = highcut / nyq
+    low = lowCut / nyq
+    high = highCut / nyq
 
     i, u = butter(order, [low, high], btype='bandstop')
     y = lfilter(i, u, data)
@@ -289,6 +289,7 @@ class FileData:
 #      interictalInterval: PreIntData向量, 其中包含所有发作间期数据的所有范围
 #      files: filename向量, 其中包含各个文件的所有数据
 def createArrayIntervalData(fSummary):
+    global endTimeFile
     preictalInterval = []
     interictalInterval = [PreIntData(datetime.min, datetime.max)]
     files = []

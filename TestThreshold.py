@@ -1,8 +1,8 @@
 import numpy as np
 import statistics
 
-OutputPathModels = ['**********/PrimaEsecuzione/',
-                    '***********/SecondaEsecuzione/']  # path of folder containing the files of the output of the model in the text phase
+OutputPathModels = ['./dataset/',
+                    './dataset/']  # path of folder containing the files of the output of the model in the text phase
 
 
 # This evaluate the average and the standard deviation of the sensitivity and FPR for
